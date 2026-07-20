@@ -230,9 +230,9 @@ do
   --
   --  See `:help wincmd` for a list of all window commands
   --
-  -- NOTE: CTRL-j/k and CTRL-SHIFT-h/l are bound by kitty-navigator.nvim in
-  -- SECTION 5 instead, so navigation flows seamlessly out into neighboring
-  -- Kitty splits. (CTRL-h/l are plain Kitty tab-switch keys, not nvim splits.)
+  -- NOTE: CTRL-SHIFT-<hjkl> are bound by kitty-navigator.nvim in SECTION 5
+  -- instead, so navigation flows seamlessly out into neighboring Kitty
+  -- splits. (Plain CTRL-h/l are Kitty tab-switch keys, not nvim splits.)
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -494,7 +494,9 @@ do
   -- in kitty.conf (already set) and the matching `pass_keys.py` keybindings
   -- there for the reverse direction (Kitty -> NeoVim).
   vim.pack.add { gh 'MunsMan/kitty-navigator.nvim' }
-  require('kitty-navigator').setup { keybindings = { left = '<C-S-h>', right = '<C-S-l>' } }
+  require('kitty-navigator').setup {
+    keybindings = { left = '<C-S-h>', right = '<C-S-l>', up = '<C-S-k>', down = '<C-S-j>' },
+  }
 
   -- [[ Fuzzy Finder (files, lsp, etc) ]]
   --
