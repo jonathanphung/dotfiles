@@ -403,6 +403,11 @@ do
   vim.api.nvim_create_autocmd('ColorScheme', {
     callback = function(ev)
       local name = ev.match
+      -- Some colorschemes (e.g. south.nvim) call `highlight clear` in their
+      -- setup(), which unsets g:colors_name as a side effect. Re-assert it
+      -- so tools that check the active colorscheme name (statuslines, etc.)
+      -- stay correct.
+      vim.g.colors_name = name
       vim.fn.writefile({ name }, base16_theme_fname)
       local kitty_conf = string.format(vim.env.HOME .. '/base16-kitty/colors/%s.conf', name)
       if vim.uv.fs_stat(kitty_conf) then vim.uv.spawn('kitty', { args = { '@', 'set-colors', '-c', kitty_conf } }, function() end) end
@@ -412,7 +417,7 @@ do
   -- Load the colorscheme here, restoring whatever was last persisted.
   do
     local ok, saved = pcall(function() return vim.fn.readfile(base16_theme_fname)[1] end)
-    vim.cmd.colorscheme(ok and saved or 'base16-gruvbox-dark-hard')
+    vim.cmd.colorscheme(ok and saved or 'south')
   end
 
   -- Highlight todo, notes, etc in comments
