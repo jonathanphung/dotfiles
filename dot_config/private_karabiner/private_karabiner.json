@@ -1,0 +1,64 @@
+{
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "fn+Caps Lock: toggle Caps Lock between Escape/Control remap and native behavior",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "mandatory": ["fn"] }
+                                },
+                                "to": [{ "set_variable": { "name": "caps_lock_native", "value": 0 } }],
+                                "conditions": [
+                                    { "type": "variable_if", "name": "caps_lock_native", "value": 1 }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "mandatory": ["fn"] }
+                                },
+                                "to": [{ "set_variable": { "name": "caps_lock_native", "value": 1 } }],
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "caps_lock_native", "value": 1 }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps Lock to Escape (alone) / Control (held)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "optional": [
+                                            "left_shift", "right_shift",
+                                            "left_control", "right_control",
+                                            "left_option", "right_option",
+                                            "left_command", "right_command"
+                                        ]
+                                    }
+                                },
+                                "to": [{ "key_code": "left_control" }],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "caps_lock_native", "value": 1 }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        }
+    ]
+}
