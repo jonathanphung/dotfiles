@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eufo pipefail
+
+if [ ! -d "{{ .chezmoi.homeDir }}/base16-kitty/.git" ]; then
+  git clone --depth 1 https://github.com/kdrag0n/base16-kitty.git "{{ .chezmoi.homeDir }}/base16-kitty"
+fi
