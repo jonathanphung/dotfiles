@@ -411,7 +411,16 @@ do
       vim.g.colors_name = name
       vim.fn.writefile({ name }, base16_theme_fname)
       local kitty_conf = string.format(vim.env.HOME .. '/base16-kitty/colors/%s.conf', name)
-      if vim.uv.fs_stat(kitty_conf) then vim.uv.spawn('kitty', { args = { '@', 'set-colors', '-c', kitty_conf } }, function() end) end
+      if vim.uv.fs_stat(kitty_conf) then
+        -- Push to every open Kitty window (not just the active one), and
+        -- copy onto current-theme.conf so `include current-theme.conf` in
+        -- kitty.conf makes this the startup default for brand-new windows
+        -- too -- otherwise only the window that triggered the ColorScheme
+        -- event gets updated, and fresh windows fall back to Kitty's
+        -- compiled-in defaults.
+        vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', '-c', kitty_conf } }, function() end)
+        vim.uv.fs_copyfile(kitty_conf, vim.env.HOME .. '/.config/kitty/current-theme.conf', function() end)
+      end
     end,
   })
 
