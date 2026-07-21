@@ -50,10 +50,6 @@
       "rev": "a35f08f63b73f0ffac045cd175fb2a22e167c39c",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
-    "neogit": {
-      "rev": "f8674ec894315c02449b61c9de9a116c5aafeb90",
-      "src": "https://github.com/NeogitOrg/neogit"
-    },
     "nvim-autopairs": {
       "rev": "7b9923abad60b903ece7c52940e1321d39eccc79",
       "src": "https://github.com/windwp/nvim-autopairs"

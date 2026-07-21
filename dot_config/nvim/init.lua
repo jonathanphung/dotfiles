@@ -375,12 +375,6 @@ do
   vim.pack.add { gh 'kdheepak/lazygit.nvim' }
   vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = '[G]it (lazy[g]it)' })
 
-  -- Magit-style git porcelain inside a normal buffer. Depends on
-  -- plenary.nvim (already pulled in by Telescope below).
-  vim.pack.add { gh 'NeogitOrg/neogit' }
-  require('neogit').setup {}
-  vim.keymap.set('n', '<leader>gn', '<cmd>Neogit<cr>', { desc = '[G]it ([N]eogit)' })
-
   -- Switch the current window to the leetcode workspace in place: change cwd
   -- and open the directory listing, no new window/tab/process.
   vim.keymap.set('n', '<leader>l', function()
