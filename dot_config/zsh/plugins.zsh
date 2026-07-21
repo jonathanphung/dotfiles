@@ -27,3 +27,11 @@ _zplugin_load zsh-users zsh-autosuggestions
 _zplugin_load zsh-users zsh-history-substring-search
 _zplugin_load jeffreytse zsh-vi-mode
 _zplugin_load zdharma-continuum fast-syntax-highlighting
+
+# fast-syntax-highlighting compiles its theme into a cache dir outside the
+# plugin's own (gitignored) directory. Recompile from our overlay
+# (~/.config/fsh/overlay.ini, recolors unrecognized-command text from red to
+# blue) if that cache is missing, e.g. on a fresh machine.
+if [[ ! -f "${XDG_CACHE_HOME:-$HOME/.cache}/fsh/theme_overlay.zsh" ]]; then
+  fast-theme XDG:overlay -q
+fi
