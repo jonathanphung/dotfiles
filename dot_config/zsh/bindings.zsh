@@ -35,3 +35,33 @@ zvm_after_init() {
   bindkey '^[[A' history-substring-search-up
   bindkey '^[[B' history-substring-search-down
 }
+
+# zsh's normal mode only edits the current command line -- it has no
+# visibility into the terminal's scrollback. These widgets shell out to
+# kitty's remote control to scroll the actual window instead, bound to vi
+# mode (vicmd) only, using Vim's own scroll keys (^E/^Y line, ^U/^D
+# half-page, ^B/^F full-page) so it feels like scrolling inside real Vim.
+# ^D overrides zsh-vi-mode's default list-choices binding in normal mode.
+function zvm_after_lazy_keybindings() {
+  _kitty_scroll() { kitty @ scroll-window "$1" >/dev/null 2>&1 }
+  zvm_kitty_scroll_line_down() { _kitty_scroll 1 }
+  zvm_kitty_scroll_line_up()   { _kitty_scroll 1- }
+  zvm_kitty_scroll_half_down() { _kitty_scroll 0.5p }
+  zvm_kitty_scroll_half_up()   { _kitty_scroll 0.5p- }
+  zvm_kitty_scroll_page_down() { _kitty_scroll 1p }
+  zvm_kitty_scroll_page_up()   { _kitty_scroll 1p- }
+
+  zvm_define_widget zvm_kitty_scroll_line_down
+  zvm_define_widget zvm_kitty_scroll_line_up
+  zvm_define_widget zvm_kitty_scroll_half_down
+  zvm_define_widget zvm_kitty_scroll_half_up
+  zvm_define_widget zvm_kitty_scroll_page_down
+  zvm_define_widget zvm_kitty_scroll_page_up
+
+  zvm_bindkey vicmd '^E' zvm_kitty_scroll_line_down
+  zvm_bindkey vicmd '^Y' zvm_kitty_scroll_line_up
+  zvm_bindkey vicmd '^D' zvm_kitty_scroll_half_down
+  zvm_bindkey vicmd '^U' zvm_kitty_scroll_half_up
+  zvm_bindkey vicmd '^F' zvm_kitty_scroll_page_down
+  zvm_bindkey vicmd '^B' zvm_kitty_scroll_page_up
+}
