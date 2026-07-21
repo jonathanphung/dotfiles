@@ -1,0 +1,16 @@
+# sync kitty colors with the persisted base16 theme
+eval "kitty @ set-colors -c $HOME/base16-kitty/colors/$(cat "$XDG_CONFIG_HOME/.base16_theme" 2>/dev/null || echo south).conf" 2>/dev/null
+
+# bun completions
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+eval "$(zoxide init zsh)"
+
+source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/bindings.zsh"
+source "$ZDOTDIR/fzf.zsh"
+source "$ZDOTDIR/prompt.zsh"

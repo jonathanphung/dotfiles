@@ -1,0 +1,5 @@
+# Redirect zsh to look for .zshenv/.zprofile/.zshrc/.zlogin under
+# $ZDOTDIR instead of $HOME. This file itself must stay at ~/.zshenv --
+# zsh always reads it first, before ZDOTDIR takes effect.
+export ZDOTDIR="$HOME/.config/zsh"
+[ -f "$ZDOTDIR/.zshenv" ] && source "$ZDOTDIR/.zshenv"
