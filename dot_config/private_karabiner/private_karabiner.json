@@ -31,6 +31,32 @@
                         ]
                     },
                     {
+                        "description": "F4 (Spotlight key) to Raycast",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "apple_vendor_keyboard_key_code": "spotlight"
+                                },
+                                "to": [{ "shell_command": "open raycast://" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "consumer_key_code": "ac_search"
+                                },
+                                "to": [{ "shell_command": "open raycast://" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "f4"
+                                },
+                                "to": [{ "shell_command": "open raycast://" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Caps Lock to Escape (alone) / Control (held)",
                         "manipulators": [
                             {
