@@ -1,3 +1,4 @@
 .config/nvim/.git
 .config/nvim/.github
 /README.md
+.config/zsh/plugins
