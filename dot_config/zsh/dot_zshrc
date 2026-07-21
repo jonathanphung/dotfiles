@@ -35,6 +35,16 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # =========================================================
+# bat
+# =========================================================
+
+# bat compiles custom themes (~/.config/bat/themes/*.tmTheme) into a cache
+# dir; build it if missing, e.g. on a fresh machine.
+if [[ ! -f "${XDG_CACHE_HOME:-$HOME/.cache}/bat/themes.bin" ]]; then
+  bat cache --build >/dev/null 2>&1
+fi
+
+# =========================================================
 # Modular Config Files
 # =========================================================
 
