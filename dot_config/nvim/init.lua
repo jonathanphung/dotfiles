@@ -367,6 +367,11 @@ do
     },
   }
 
+  -- Open lazygit in a floating window over the current buffer. Depends on
+  -- plenary.nvim (already pulled in by Telescope below) for the border.
+  vim.pack.add { gh 'kdheepak/lazygit.nvim' }
+  vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = '[G]it (lazy[g]it)' })
+
   -- Useful plugin to show you pending keybinds.
   vim.pack.add { gh 'folke/which-key.nvim' }
   require('which-key').setup {
@@ -377,6 +382,7 @@ do
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
+      { '<leader>g', group = '[G]it' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
