@@ -2,7 +2,7 @@ format = """$git_branch$git_status$directory$character"""
 
 [character]
 success_symbol = "[❯](bold fg:#2b9728)"
-error_symbol = "[❯](bold fg:#c1293d)"
+error_symbol = "[❯](bold fg:#787571)"
 vimcmd_symbol = "[❯](bold fg:#323b45)"
 
 [directory]
