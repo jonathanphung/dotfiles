@@ -24,6 +24,10 @@ zvm_after_init() {
   # Ctrl+F -> fzf file picker (no hidden files)
   bindkey '^F' _fzf_file_no_hidden
 
+  # Ctrl+R -> fzf history search (zsh-vi-mode's reset restores zsh's stock
+  # history-incremental-search-backward on this key, clobbering fzf's binding)
+  bindkey '^R' fzf-history-widget
+
   # Ctrl+\ -> toggle autosuggestions (useful for screen recordings)
   bindkey '^\' autosuggest-toggle
 
