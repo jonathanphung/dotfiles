@@ -1,9 +1,16 @@
 format = """$git_branch$git_status$directory$character"""
 
 [character]
-success_symbol = "[❯](bold fg:#2b9728)"
+# Pill-style mode badges using south.nvim's actual mini.statusline mode
+# colors (queried directly from nvim, not guessed):
+#   Normal:  fg #fcfcfd bg #323b45   Visual: fg #323b45 bg #d5fdd2
+#   Replace: fg #b5bac4 bg #fbdcdc  Insert: fg #323b45 bg #d9edfc
+success_symbol = "[ ❯ ](bold fg:#323b45 bg:#d9edfc)"
 error_symbol = "[❯](bold fg:#c1293d)"
-vimcmd_symbol = "[N](bold fg:#2b9728)"
+vimcmd_symbol = "[ N ](bold fg:#fcfcfd bg:#323b45)"
+vimcmd_visual_symbol = "[ V ](bold fg:#323b45 bg:#d5fdd2)"
+vimcmd_replace_symbol = "[ R ](bold fg:#b5bac4 bg:#fbdcdc)"
+vimcmd_replace_one_symbol = "[ R ](bold fg:#b5bac4 bg:#fbdcdc)"
 
 [directory]
 style = "bold fg:#0850b5"
