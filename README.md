@@ -5,7 +5,7 @@ all my settings for various stuff
 ## cli
 - kitty
 - neovim
-- fish
+- zsh
 - starship
 
 ## mac
