@@ -64,4 +64,12 @@ function zvm_after_lazy_keybindings() {
   zvm_bindkey vicmd '^U' zvm_kitty_scroll_half_up
   zvm_bindkey vicmd '^F' zvm_kitty_scroll_page_down
   zvm_bindkey vicmd '^B' zvm_kitty_scroll_page_up
+
+  # j/k -> plain text motion (move within a multi-line buffer, no history
+  # fallback), like real Vim. J/K take over the history-cycling behavior
+  # j/k had by default. J overrides zsh-vi-mode's default vi-join binding.
+  zvm_bindkey vicmd 'j' down-line
+  zvm_bindkey vicmd 'k' up-line
+  zvm_bindkey vicmd 'J' down-line-or-history
+  zvm_bindkey vicmd 'K' up-line-or-history
 }
