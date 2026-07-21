@@ -70,3 +70,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 eval "$(zoxide init zsh)"
+
+# Clear $? so a stray non-zero exit from any command above (e.g. kitty
+# color sync running before kitty's remote-control socket is ready) can't
+# leak into starship's first status check and show a false error state.
+true
