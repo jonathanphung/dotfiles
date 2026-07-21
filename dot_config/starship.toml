@@ -1,2 +1,13 @@
 [character]
-vimcmd_symbol = "[N](bold green)"
+success_symbol = "[❯](bold fg:#2b9728)"
+error_symbol = "[❯](bold fg:#c1293d)"
+vimcmd_symbol = "[N](bold fg:#2b9728)"
+
+[directory]
+style = "bold fg:#0850b5"
+
+[git_branch]
+style = "bold fg:#615fb9"
+
+[git_status]
+style = "bold fg:#c1293d"
