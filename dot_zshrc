@@ -19,7 +19,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 alias n="nvim"
+alias leet="cd ~/repos/leetcode && nvim ."
+alias dev="kitty @ launch --location=vsplit --cwd=current lazygit && exec claude"
 
 # vi-style command-line editing
 bindkey -v
 export KEYTIMEOUT=10
+
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+source <(fzf --zsh)
