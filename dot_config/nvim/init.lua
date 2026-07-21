@@ -382,6 +382,16 @@ do
     vim.cmd 'edit .'
   end, { desc = '[L]eet: switch to ~/repos/leetcode' })
 
+  -- Switch the current window to the learn-vim exercises workspace in place:
+  -- change cwd and open the directory listing sorted newest-first, so the
+  -- most recently edited exercise (where you left off) is at the top.
+  vim.keymap.set('n', '<leader>v', function()
+    vim.cmd('cd ~/.vscode/extensions/vintharas.learn-vim-0.0.28/exercises')
+    vim.g.netrw_sort_by = 'time'
+    vim.g.netrw_sort_direction = 'reverse'
+    vim.cmd 'edit .'
+  end, { desc = '[V]im exercises: switch to learn-vim exercises' })
+
   -- Useful plugin to show you pending keybinds.
   vim.pack.add { gh 'folke/which-key.nvim' }
   require('which-key').setup {
