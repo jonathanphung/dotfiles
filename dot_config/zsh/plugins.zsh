@@ -15,6 +15,8 @@ _zplugin_load() {
   source "${plugin_path}/${2}.plugin.zsh"
 }
 
+export ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+
 zplugin-update() {
   local dir
   for dir in "${ZPLUGINDIR}"/*/; do
