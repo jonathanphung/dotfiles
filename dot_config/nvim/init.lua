@@ -372,6 +372,13 @@ do
   vim.pack.add { gh 'kdheepak/lazygit.nvim' }
   vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = '[G]it (lazy[g]it)' })
 
+  -- Switch the current window to the leetcode workspace in place: change cwd
+  -- and open the directory listing, no new window/tab/process.
+  vim.keymap.set('n', '<leader>l', function()
+    vim.cmd('cd ~/repos/leetcode')
+    vim.cmd 'edit .'
+  end, { desc = '[L]eet: switch to ~/repos/leetcode' })
+
   -- Useful plugin to show you pending keybinds.
   vim.pack.add { gh 'folke/which-key.nvim' }
   require('which-key').setup {
