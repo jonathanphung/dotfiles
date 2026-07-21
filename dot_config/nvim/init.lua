@@ -420,6 +420,19 @@ do
         -- compiled-in defaults.
         vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', '-c', kitty_conf } }, function() end)
         vim.uv.fs_copyfile(kitty_conf, vim.env.HOME .. '/.config/kitty/current-theme.conf', function() end)
+      else
+        -- No base16-kitty mapping for this colorscheme (e.g. a custom or
+        -- one-off theme) -- fall back to reading background/cursor live off
+        -- Normal's highlight group instead, à la typicode/bg.nvim. Only
+        -- covers those two colors (no full 16-color palette to push), but
+        -- means any colorscheme works without a hand-mapped conf file.
+        local normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+        if normal.bg then
+          local bg_hex = string.format('#%06x', normal.bg)
+          local cursor_hex = normal.fg and string.format('#%06x', normal.fg) or bg_hex
+          vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', 'background=' .. bg_hex, 'cursor=' .. cursor_hex } }, function() end)
+          vim.fn.writefile({ 'background ' .. bg_hex, 'cursor ' .. cursor_hex }, vim.env.HOME .. '/.config/kitty/current-theme.conf')
+        end
       end
     end,
   })
