@@ -1,0 +1,14 @@
+[user]
+	name = Jonathan Phung
+	email = 133593720+jonathanphung@users.noreply.github.com
+[init]
+	defaultBranch = main
+[pull]
+[core]
+	excludesfile = /Users/jon/.gitignore_global
+	editor = code --wait
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

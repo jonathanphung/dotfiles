@@ -1,0 +1,26 @@
+gui:
+  theme:
+    activeBorderColor:
+      - '#93bcf5'
+      - bold
+    inactiveBorderColor:
+      - '#b5bac4'
+    optionsTextColor:
+      - '#0850b5'
+    selectedLineBgColor:
+      - '#edf2fd'
+    selectedRangeBgColor:
+      - '#edf2fd'
+    cherryPickedCommitBgColor:
+      - '#ceeaff'
+    cherryPickedCommitFgColor:
+      - '#323b45'
+    unstagedChangesColor:
+      - '#c1293d'
+    defaultFgColor:
+      - '#323b45'
+  authorColors:
+    'Jonathan Phung': '#0850b5'
+    '*': '#615fb9'
+os:
+  editPreset: nvim

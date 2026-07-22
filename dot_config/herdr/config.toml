@@ -1,0 +1,15 @@
+[theme]
+name = "catppuccin-latte"
+auto_switch = false
+
+[ui]
+agent_panel_sort = "priority"
+
+[ui.toast]
+delivery = "system"
+
+[ui.sound]
+enabled = false
+
+[terminal]
+default_shell = "fish"
