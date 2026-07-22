@@ -88,6 +88,9 @@ function zvm_after_lazy_keybindings() {
   zvm_bindkey vicmd 'j' down-line-or-history
   zvm_bindkey vicmd 'k' up-line-or-history
 
+  # Match Vim: pressing v again exits Visual mode instead of opening $EDITOR.
+  zvm_bindkey visual 'v' zvm_enter_visual_mode
+
   # Open terminal scrollback in real NeoVim with V from vi command mode,
   # leaving lowercase v available for Visual mode.
   zvm_vi_scrollback() {
