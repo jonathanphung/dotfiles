@@ -18,4 +18,4 @@ truncation_length = 1
 style = "bold fg:#615fb9"
 
 [git_status]
-style = "bold fg:#c1293d"
+style = "bold fg:#d99610"
