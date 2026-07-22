@@ -65,13 +65,7 @@ function zvm_after_lazy_keybindings() {
   zvm_bindkey vicmd '^F' zvm_kitty_scroll_page_down
   zvm_bindkey vicmd '^B' zvm_kitty_scroll_page_up
 
-  # j/k -> scroll the terminal output a line at a time, like browsing text
-  # in real Vim (down-line/up-line are no-ops on a single-line command, so
-  # scrolling is what "moving up and down in the text" actually means here).
-  # J/K take over the history-cycling behavior j/k had by default. J
-  # overrides zsh-vi-mode's default vi-join binding.
-  zvm_bindkey vicmd 'j' zvm_kitty_scroll_line_down
-  zvm_bindkey vicmd 'k' zvm_kitty_scroll_line_up
-  zvm_bindkey vicmd 'J' down-line-or-history
-  zvm_bindkey vicmd 'K' up-line-or-history
+  # Keep j/k for command-history navigation in vi command mode.
+  zvm_bindkey vicmd 'j' down-line-or-history
+  zvm_bindkey vicmd 'k' up-line-or-history
 }
