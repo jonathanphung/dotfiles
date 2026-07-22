@@ -12,6 +12,25 @@ ZVM_VI_HIGHLIGHT_BACKGROUND=none
 ZVM_VI_HIGHLIGHT_FOREGROUND=none
 ZVM_VI_HIGHLIGHT_EXTRASTYLE=none
 
+# Starship cannot detect zsh visual mode from KEYMAP. Export zsh-vi-mode's
+# explicit mode state for the prompt instead.
+zvm_after_select_vi_mode() {
+  case $ZVM_MODE in
+    $ZVM_MODE_NORMAL)
+      export STARSHIP_ZVM_SYMBOL=N
+      ;;
+    $ZVM_MODE_VISUAL|$ZVM_MODE_VISUAL_LINE)
+      export STARSHIP_ZVM_SYMBOL=❮
+      ;;
+    $ZVM_MODE_REPLACE)
+      export STARSHIP_ZVM_SYMBOL=R
+      ;;
+    *)
+      unset STARSHIP_ZVM_SYMBOL
+      ;;
+  esac
+}
+
 # zsh-vi-mode resets all bindings on init, so custom bindings
 # must be registered via this hook to survive.
 zvm_after_init() {
@@ -68,4 +87,12 @@ function zvm_after_lazy_keybindings() {
   # Keep j/k for command-history navigation in vi command mode.
   zvm_bindkey vicmd 'j' down-line-or-history
   zvm_bindkey vicmd 'k' up-line-or-history
+
+  # Open terminal scrollback in real NeoVim with V from vi command mode,
+  # leaving lowercase v available for Visual mode.
+  zvm_vi_scrollback() {
+    kitty @ action kitty_scrollback_nvim --no-response >/dev/null 2>&1
+  }
+  zvm_define_widget zvm_vi_scrollback
+  zvm_bindkey vicmd 'V' zvm_vi_scrollback
 }
