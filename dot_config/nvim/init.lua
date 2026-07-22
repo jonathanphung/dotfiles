@@ -546,6 +546,17 @@ do
     keybindings = { left = '<C-S-h>', right = '<C-S-l>', up = '<C-S-k>', down = '<C-S-j>' },
   }
 
+  -- [[ Kitty Scrollback ]]
+  -- Opens Kitty's scrollback buffer (or just the last command's output) in a
+  -- real NeoVim window, launched via a Kitten from kitty.conf. Unlike piping
+  -- raw scrollback text through `scrollback_pager`, this properly parses
+  -- Kitty's ANSI output into real syntax highlighting and loads the full
+  -- buffer up front, so normal Vim scrolling/search/visual-mode selection
+  -- all work as expected. clipboard=unnamedplus (set above) means
+  -- <leader>y/<leader>Y yank straight to the system clipboard.
+  vim.pack.add { gh 'mikesmithgh/kitty-scrollback.nvim' }
+  require('kitty-scrollback').setup()
+
   -- [[ Fuzzy Finder (files, lsp, etc) ]]
   --
   -- Telescope is a fuzzy finder that comes with a lot of different things that

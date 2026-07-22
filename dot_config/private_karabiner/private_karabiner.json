@@ -7,51 +7,47 @@
                         "description": "fn+Caps Lock: toggle Caps Lock between Escape/Control remap and native behavior",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "name": "caps_lock_native",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": { "mandatory": ["fn"] }
                                 },
-                                "to": [{ "set_variable": { "name": "caps_lock_native", "value": 0 } }],
-                                "conditions": [
-                                    { "type": "variable_if", "name": "caps_lock_native", "value": 1 }
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "caps_lock_native",
+                                            "value": 0
+                                        }
+                                    }
                                 ],
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "name": "caps_lock_native",
+                                        "type": "variable_unless",
+                                        "value": 1
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": { "mandatory": ["fn"] }
                                 },
-                                "to": [{ "set_variable": { "name": "caps_lock_native", "value": 1 } }],
-                                "conditions": [
-                                    { "type": "variable_unless", "name": "caps_lock_native", "value": 1 }
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "caps_lock_native",
+                                            "value": 1
+                                        }
+                                    }
                                 ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "F4 (Spotlight key) to Raycast",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "apple_vendor_keyboard_key_code": "spotlight"
-                                },
-                                "to": [{ "shell_command": "open raycast://" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "consumer_key_code": "ac_search"
-                                },
-                                "to": [{ "shell_command": "open raycast://" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "f4"
-                                },
-                                "to": [{ "shell_command": "open raycast://" }],
                                 "type": "basic"
                             }
                         ]
@@ -60,22 +56,19 @@
                         "description": "Caps Lock to Escape (alone) / Control (held)",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "name": "caps_lock_native",
+                                        "type": "variable_unless",
+                                        "value": 1
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "caps_lock",
-                                    "modifiers": {
-                                        "optional": [
-                                            "left_shift", "right_shift",
-                                            "left_control", "right_control",
-                                            "left_option", "right_option",
-                                            "left_command", "right_command"
-                                        ]
-                                    }
+                                    "modifiers": { "optional": ["left_shift", "right_shift", "left_control", "right_control", "left_option", "right_option", "left_command", "right_command"] }
                                 },
                                 "to": [{ "key_code": "left_control" }],
                                 "to_if_alone": [{ "key_code": "escape" }],
-                                "conditions": [
-                                    { "type": "variable_unless", "name": "caps_lock_native", "value": 1 }
-                                ],
                                 "type": "basic"
                             }
                         ]
