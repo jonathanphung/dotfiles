@@ -2,3 +2,4 @@
 .config/nvim/.github
 /README.md
 .config/zsh/plugins
+.config/gh/hosts.yml
