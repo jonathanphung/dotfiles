@@ -6,6 +6,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 - kitty
 - neovim
 - zsh
+- bash (Homebrew)
 - starship
 - bat
 - lazygit
@@ -22,8 +23,8 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 ## Installation
 
 Requires [chezmoi](https://www.chezmoi.io/install/) and the underlying apps
-above (kitty, neovim, karabiner, etc.) to already be installed — chezmoi only
-manages their config files, not the apps themselves.
+above (kitty, neovim, karabiner, etc.) to already be installed. Chezmoi manages
+their config files, except that it installs Homebrew Bash automatically on macOS.
 
 This repo is private, so clone over SSH rather than HTTPS.
 
@@ -40,9 +41,9 @@ convention is to assume a repo named `dotfiles` for the given GitHub user —
 but it clones over HTTPS, which will fail auth against a private repo unless
 your git credential helper is already set up for GitHub.
 
-On first apply, a `run_once_before` script also clones the
-[`base16-kitty`](https://github.com/kdrag0n/base16-kitty) theme repo into
-`~/base16-kitty` automatically — no separate step needed.
+On first apply, `run_once_before` scripts install Homebrew Bash on macOS and
+clone the [`base16-kitty`](https://github.com/kdrag0n/base16-kitty) theme repo
+into `~/base16-kitty` automatically.
 
 To pull future updates from the repo onto this machine:
 
