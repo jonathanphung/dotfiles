@@ -15,6 +15,8 @@ alias cat='bat'
 alias grep='rg --color=auto'
 alias diff='diff --color=auto'
 alias df='df -h'
+alias python='python3'
+alias cli50='command cli50 -d "$HOME/.ssh"'
 
 # =========================================================
 # Navigation
