@@ -12,6 +12,16 @@ ZVM_VI_HIGHLIGHT_BACKGROUND=none
 ZVM_VI_HIGHLIGHT_FOREGROUND=none
 ZVM_VI_HIGHLIGHT_EXTRASTYLE=none
 
+# Accept the visible autosuggestion with Tab; otherwise use normal completion.
+_tab_complete_or_accept() {
+  if [[ -n $POSTDISPLAY ]] && (( CURSOR == $#BUFFER )); then
+    zle autosuggest-accept
+  else
+    zle fzf-completion
+  fi
+}
+zle -N _tab_complete_or_accept
+
 # Starship cannot detect zsh visual mode from KEYMAP. Export zsh-vi-mode's
 # explicit mode state for the prompt instead.
 zvm_after_select_vi_mode() {
@@ -39,6 +49,8 @@ zvm_after_init() {
 
   # Ctrl+Left -> move backward one word (^[[1;5D is the terminal escape code)
   bindkey '^[[1;5D' backward-word
+
+  bindkey -M viins '^I' _tab_complete_or_accept
 
   # Ctrl+F -> fzf file picker (no hidden files)
   bindkey '^F' _fzf_file_no_hidden
