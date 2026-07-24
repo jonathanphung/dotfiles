@@ -17,7 +17,7 @@
       "pattern": "https?://vim-adventures.com/*"
     }
   ],
-  "keyMappings": "unmap J\nunmap K\n\nmap <c-j> nextTab\nmap <c-k> previousTab\nmap <c-d> removeTab \nmap <c-h> goBack\nmap <c-l> goForward\n\nmap J moveTabLeft\nmap K moveTabRight",
-  "searchEngines": "w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\n\n# More examples.\n#\n# (Vimium supports search completion Wikipedia, as\n# above, and for these.)\ngh: https://github.com/search?q=%s GitHub\ng: https://www.google.com/search?q=%s Google\n# l: https://www.google.com/search?q=%s&btnI I'm feeling lucky...\ny: https://www.youtube.com/results?search_query=%s YouTube\ngm: https://www.google.com/maps?q=%s Google Maps\n# b: https://www.bing.com/search?q=%s Bing\n# d: https://duckduckgo.com/?q=%s DuckDuckGo\nr: https://www.reddit.com/search/?q=%s Reddit\naz: https://www.amazon.com/s/?field-keywords=%s Amazon\n# qw: https://www.qwant.com/?q=%s Qwant",
+  "keyMappings": "unmap J\nunmap K\n\nmap <c-j> nextTab\nmap <c-k> previousTab\nmap <c-d> removeTab \nmap <c-h> goBack\nmap <c-l> goForward\n\nmap K moveTabLeft\nmap J moveTabRight",
+  "searchEngines": "w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\n\n# More examples.\n#\n# (Vimium supports search completion Wikipedia, as\n# above, and for these.)\ngh: https://github.com/search?q=%s GitHub\nli: https://www.linkedin.com/search/results/all/?keywords=%s LinkedIn\ng: https://www.google.com/search?q=%s Google\n# l: https://www.google.com/search?q=%s&btnI I'm feeling lucky...\ny: https://www.youtube.com/results?search_query=%s YouTube\ngm: https://www.google.com/maps?q=%s Google Maps\n# b: https://www.bing.com/search?q=%s Bing\n# d: https://duckduckgo.com/?q=%s DuckDuckGo\nr: https://www.reddit.com/search/?q=%s Reddit\naz: https://www.amazon.com/s/?field-keywords=%s Amazon\n# qw: https://www.qwant.com/?q=%s Qwant",
   "settingsVersion": "2.4.2"
 }
