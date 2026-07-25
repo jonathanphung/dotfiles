@@ -74,27 +74,29 @@ zvm_after_init() {
 # half-page, ^B/^F full-page) so it feels like scrolling inside real Vim.
 # ^D overrides zsh-vi-mode's default list-choices binding in normal mode.
 function zvm_after_lazy_keybindings() {
-  _kitty_scroll() { kitty @ scroll-window "$1" >/dev/null 2>&1 }
-  zvm_kitty_scroll_line_down() { _kitty_scroll 1 }
-  zvm_kitty_scroll_line_up()   { _kitty_scroll 1- }
-  zvm_kitty_scroll_half_down() { _kitty_scroll 0.5p }
-  zvm_kitty_scroll_half_up()   { _kitty_scroll 0.5p- }
-  zvm_kitty_scroll_page_down() { _kitty_scroll 1p }
-  zvm_kitty_scroll_page_up()   { _kitty_scroll 1p- }
+  if [[ -n "${KITTY_WINDOW_ID:-}" ]] && (( $+commands[kitty] )); then
+    _kitty_scroll() { kitty @ scroll-window "$1" >/dev/null 2>&1 }
+    zvm_kitty_scroll_line_down() { _kitty_scroll 1 }
+    zvm_kitty_scroll_line_up()   { _kitty_scroll 1- }
+    zvm_kitty_scroll_half_down() { _kitty_scroll 0.5p }
+    zvm_kitty_scroll_half_up()   { _kitty_scroll 0.5p- }
+    zvm_kitty_scroll_page_down() { _kitty_scroll 1p }
+    zvm_kitty_scroll_page_up()   { _kitty_scroll 1p- }
 
-  zvm_define_widget zvm_kitty_scroll_line_down
-  zvm_define_widget zvm_kitty_scroll_line_up
-  zvm_define_widget zvm_kitty_scroll_half_down
-  zvm_define_widget zvm_kitty_scroll_half_up
-  zvm_define_widget zvm_kitty_scroll_page_down
-  zvm_define_widget zvm_kitty_scroll_page_up
+    zvm_define_widget zvm_kitty_scroll_line_down
+    zvm_define_widget zvm_kitty_scroll_line_up
+    zvm_define_widget zvm_kitty_scroll_half_down
+    zvm_define_widget zvm_kitty_scroll_half_up
+    zvm_define_widget zvm_kitty_scroll_page_down
+    zvm_define_widget zvm_kitty_scroll_page_up
 
-  zvm_bindkey vicmd '^E' zvm_kitty_scroll_line_down
-  zvm_bindkey vicmd '^Y' zvm_kitty_scroll_line_up
-  zvm_bindkey vicmd '^D' zvm_kitty_scroll_half_down
-  zvm_bindkey vicmd '^U' zvm_kitty_scroll_half_up
-  zvm_bindkey vicmd '^F' zvm_kitty_scroll_page_down
-  zvm_bindkey vicmd '^B' zvm_kitty_scroll_page_up
+    zvm_bindkey vicmd '^E' zvm_kitty_scroll_line_down
+    zvm_bindkey vicmd '^Y' zvm_kitty_scroll_line_up
+    zvm_bindkey vicmd '^D' zvm_kitty_scroll_half_down
+    zvm_bindkey vicmd '^U' zvm_kitty_scroll_half_up
+    zvm_bindkey vicmd '^F' zvm_kitty_scroll_page_down
+    zvm_bindkey vicmd '^B' zvm_kitty_scroll_page_up
+  fi
 
   # Keep j/k for command-history navigation in vi command mode.
   zvm_bindkey vicmd 'j' down-line-or-history
@@ -103,11 +105,14 @@ function zvm_after_lazy_keybindings() {
   # Match Vim: pressing v again exits Visual mode instead of opening $EDITOR.
   zvm_bindkey visual 'v' zvm_enter_visual_mode
 
-  # Open terminal scrollback in real NeoVim with V from vi command mode,
-  # leaving lowercase v available for Visual mode.
-  zvm_vi_scrollback() {
-    kitty @ action kitty_scrollback_nvim --no-response >/dev/null 2>&1
-  }
-  zvm_define_widget zvm_vi_scrollback
-  zvm_bindkey vicmd 'V' zvm_vi_scrollback
+  if [[ -n "${KITTY_WINDOW_ID:-}" ]] && (( $+commands[kitty] )); then
+    # Open terminal scrollback in real NeoVim with V from vi command mode,
+    # leaving lowercase v available for Visual mode. WezTerm owns its
+    # scrollback shortcut directly in wezterm.lua.
+    zvm_vi_scrollback() {
+      kitty @ action kitty_scrollback_nvim --no-response >/dev/null 2>&1
+    }
+    zvm_define_widget zvm_vi_scrollback
+    zvm_bindkey vicmd 'V' zvm_vi_scrollback
+  fi
 }

@@ -69,8 +69,11 @@ source "$ZDOTDIR/prompt.zsh"
 # Misc integrations
 # =========================================================
 
-# sync kitty colors with the persisted base16 theme
-eval "kitty @ set-colors -c $HOME/base16-kitty/colors/$(cat "$XDG_CONFIG_HOME/.base16_theme" 2>/dev/null || echo south).conf" 2>/dev/null
+# Sync Kitty colors with the persisted base16 theme. WezTerm watches
+# Kitty's current-theme.conf directly, so it needs no remote-control call.
+if [[ -n "${KITTY_WINDOW_ID:-}" ]] && (( $+commands[kitty] )); then
+  eval "kitty @ set-colors -c $HOME/base16-kitty/colors/$(cat "$XDG_CONFIG_HOME/.base16_theme" 2>/dev/null || echo south).conf" 2>/dev/null
+fi
 
 # bun completions
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
@@ -81,7 +84,6 @@ export NVM_DIR="$HOME/.nvm"
 
 eval "$(zoxide init zsh)"
 
-# Clear $? so a stray non-zero exit from any command above (e.g. kitty
-# color sync running before kitty's remote-control socket is ready) can't
-# leak into starship's first status check and show a false error state.
+# Clear $? so a stray non-zero exit from any command above can't leak into
+# starship's first status check and show a false error state.
 true

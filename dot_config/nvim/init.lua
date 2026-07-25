@@ -233,9 +233,9 @@ do
   --
   --  See `:help wincmd` for a list of all window commands
   --
-  -- NOTE: CTRL-SHIFT-<hjkl> are bound by kitty-navigator.nvim in SECTION 5
-  -- instead, so navigation flows seamlessly out into neighboring Kitty
-  -- splits. (Plain CTRL-h/l are Kitty tab-switch keys, not nvim splits.)
+  -- NOTE: CTRL-SHIFT-<hjkl> are bound to terminal-aware split navigation in
+  -- SECTION 5, so navigation flows seamlessly out into neighboring Kitty or
+  -- WezTerm panes. (Plain CTRL-h/l are terminal tab-switch keys.)
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -409,7 +409,7 @@ do
   }
 
   -- [[ Colorscheme ]]
-  -- base16 colorscheme, kept in sync with Kitty's colors via
+  -- base16 colorscheme, kept in sync with the terminal colors via
   -- $XDG_CONFIG_HOME/.base16_theme (see the <leader>c picker set up
   -- alongside Telescope below). south.nvim isn't a base16 scheme, but it's
   -- hooked into the same sync mechanism via a hand-mapped
@@ -426,7 +426,8 @@ do
   -- Any colorscheme change fires `ColorScheme` -- whether triggered by
   -- `:colorscheme`, the <leader>c picker, or restoring the persisted theme
   -- below -- so this is the one place that persists the choice and pushes
-  -- matching colors to Kitty. A plain `:colo <name>` now stays in sync too.
+  -- matching colors to Kitty and WezTerm. A plain `:colo <name>` now stays
+  -- in sync too.
   vim.api.nvim_create_autocmd('ColorScheme', {
     callback = function(ev)
       local name = ev.match
@@ -438,13 +439,11 @@ do
       vim.fn.writefile({ name }, base16_theme_fname)
       local kitty_conf = string.format(vim.env.HOME .. '/base16-kitty/colors/%s.conf', name)
       if vim.uv.fs_stat(kitty_conf) then
-        -- Push to every open Kitty window (not just the active one), and
-        -- copy onto current-theme.conf so `include current-theme.conf` in
-        -- kitty.conf makes this the startup default for brand-new windows
-        -- too -- otherwise only the window that triggered the ColorScheme
-        -- event gets updated, and fresh windows fall back to Kitty's
-        -- compiled-in defaults.
-        vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', '-c', kitty_conf } }, function() end)
+        -- Push to every open Kitty window (not just the active one). WezTerm
+        -- watches the same current-theme.conf file and reloads it below.
+        if vim.fn.executable 'kitty' == 1 then
+          vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', '-c', kitty_conf } }, function() end)
+        end
         vim.uv.fs_copyfile(kitty_conf, vim.env.HOME .. '/.config/kitty/current-theme.conf', function() end)
       else
         -- No base16-kitty mapping for this colorscheme (e.g. a custom or
@@ -456,7 +455,9 @@ do
         if normal.bg then
           local bg_hex = string.format('#%06x', normal.bg)
           local cursor_hex = normal.fg and string.format('#%06x', normal.fg) or bg_hex
-          vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', 'background=' .. bg_hex, 'cursor=' .. cursor_hex } }, function() end)
+          if vim.fn.executable 'kitty' == 1 then
+            vim.uv.spawn('kitty', { args = { '@', 'set-colors', '--all', 'background=' .. bg_hex, 'cursor=' .. cursor_hex } }, function() end)
+          end
           vim.fn.writefile({ 'background ' .. bg_hex, 'cursor ' .. cursor_hex }, vim.env.HOME .. '/.config/kitty/current-theme.conf')
         end
       end
@@ -535,27 +536,39 @@ end
 -- Telescope setup, keymaps, LSP picker mappings
 -- ============================================================
 do
-  -- [[ Kitty Navigator ]]
-  -- Lets CTRL+<hjkl> move between NeoVim splits and Kitty splits with the
-  -- same keys: when there's no split to move to inside NeoVim, focus passes
-  -- through to the neighboring Kitty window. Requires `allow_remote_control`
-  -- in kitty.conf (already set) and the matching `pass_keys.py` keybindings
-  -- there for the reverse direction (Kitty -> NeoVim).
-  vim.pack.add { gh 'MunsMan/kitty-navigator.nvim' }
-  require('kitty-navigator').setup {
-    keybindings = { left = '<C-S-h>', right = '<C-S-l>', up = '<C-S-k>', down = '<C-S-j>' },
-  }
+  if vim.env.TERM_PROGRAM == 'WezTerm' then
+    -- [[ WezTerm Navigator ]]
+    -- WezTerm passes CTRL-SHIFT-hjkl into Neovim. Move inside Neovim first;
+    -- at an outer edge, ask the surrounding WezTerm pane tree to continue.
+    local function wezterm_navigate(direction, wincmd)
+      return function()
+        local before = vim.api.nvim_get_current_win()
+        vim.cmd.wincmd(wincmd)
+        if before == vim.api.nvim_get_current_win() and vim.fn.executable 'wezterm' == 1 then
+          vim.fn.jobstart({ 'wezterm', 'cli', 'activate-pane-direction', direction }, { detach = true })
+        end
+      end
+    end
 
-  -- [[ Kitty Scrollback ]]
-  -- Opens Kitty's scrollback buffer (or just the last command's output) in a
-  -- real NeoVim window, launched via a Kitten from kitty.conf. Unlike piping
-  -- raw scrollback text through `scrollback_pager`, this properly parses
-  -- Kitty's ANSI output into real syntax highlighting and loads the full
-  -- buffer up front, so normal Vim scrolling/search/visual-mode selection
-  -- all work as expected. clipboard=unnamedplus (set above) means
-  -- <leader>y/<leader>Y yank straight to the system clipboard.
-  vim.pack.add { gh 'mikesmithgh/kitty-scrollback.nvim' }
-  require('kitty-scrollback').setup()
+    vim.keymap.set('n', '<C-S-h>', wezterm_navigate('Left', 'h'), { desc = 'Focus split/pane left' })
+    vim.keymap.set('n', '<C-S-j>', wezterm_navigate('Down', 'j'), { desc = 'Focus split/pane down' })
+    vim.keymap.set('n', '<C-S-k>', wezterm_navigate('Up', 'k'), { desc = 'Focus split/pane up' })
+    vim.keymap.set('n', '<C-S-l>', wezterm_navigate('Right', 'l'), { desc = 'Focus split/pane right' })
+  else
+    -- [[ Kitty Navigator ]]
+    -- Lets CTRL-SHIFT-hjkl move between NeoVim splits and Kitty splits with
+    -- the same keys. Requires Kitty remote control plus pass_keys.py.
+    vim.pack.add { gh 'MunsMan/kitty-navigator.nvim' }
+    require('kitty-navigator').setup {
+      keybindings = { left = '<C-S-h>', right = '<C-S-l>', up = '<C-S-k>', down = '<C-S-j>' },
+    }
+
+    -- [[ Kitty Scrollback ]]
+    -- Opens Kitty's scrollback buffer (or just the last command's output) in
+    -- a real NeoVim window. WezTerm implements this in wezterm.lua instead.
+    vim.pack.add { gh 'mikesmithgh/kitty-scrollback.nvim' }
+    require('kitty-scrollback').setup()
+  end
 
   -- [[ Fuzzy Finder (files, lsp, etc) ]]
   --

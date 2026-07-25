@@ -4,6 +4,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## cli
 - kitty
+- wezterm (Windows)
 - neovim
 - zsh
 - bash (Homebrew)
@@ -23,8 +24,9 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 ## Installation
 
 Requires [chezmoi](https://www.chezmoi.io/install/) and the underlying apps
-above (kitty, neovim, karabiner, etc.) to already be installed. Chezmoi manages
-their config files, except that it installs Homebrew Bash automatically on macOS.
+above (kitty/WezTerm, neovim, karabiner, etc.) to already be installed. Chezmoi
+manages their config files, except that it installs Homebrew Bash automatically
+on macOS.
 
 This repo is private, so clone over SSH rather than HTTPS.
 
@@ -36,14 +38,20 @@ brew install chezmoi
 chezmoi init --apply git@github.com:jonathanphung/dotfiles.git
 ```
 
+On Windows, the WezTerm config is deployed to
+`%USERPROFILE%\.config\wezterm\wezterm.lua`. It uses the native Windows shell
+unless `default_prog` or `default_domain` is set locally. Put background images
+in `%USERPROFILE%\.config\wezterm\backgrounds`; it will also reuse images from
+the existing Kitty backgrounds directory.
+
 `chezmoi init --apply jonathanphung` also works, since chezmoi's default
 convention is to assume a repo named `dotfiles` for the given GitHub user —
 but it clones over HTTPS, which will fail auth against a private repo unless
 your git credential helper is already set up for GitHub.
 
-On first apply, `run_once_before` scripts install Homebrew Bash on macOS and
-clone the [`base16-kitty`](https://github.com/kdrag0n/base16-kitty) theme repo
-into `~/base16-kitty` automatically.
+On first apply outside Windows, `run_once_before` scripts clone the
+[`base16-kitty`](https://github.com/kdrag0n/base16-kitty) theme repo into
+`~/base16-kitty` automatically. The macOS setup also installs Homebrew Bash.
 
 To pull future updates from the repo onto this machine:
 
