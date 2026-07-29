@@ -42,6 +42,6 @@ alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 # =========================================================
 
 alias n="nvim"
-alias leet="cd ~/repos/leetcode && nvim ."
-alias learnvim="cd ~/.vscode/extensions/vintharas.learn-vim-0.0.28/exercises && eza -lh --icons --git --sort=modified -r && nvim ."
+alias leet="cd ~/repos/leetcode && yazi"
+alias learnvim="cd ~/.vscode/extensions/vintharas.learn-vim-0.0.28/exercises && yazi"
 alias dev="kitty @ launch --location=vsplit --cwd=current lazygit && exec claude"
