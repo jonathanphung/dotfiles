@@ -19,7 +19,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 - karabiner
 - codexbar
 - herdr
-- firefox browser extensions (vimium)
+- zen browser extensions (see `browser-extensions/`)
 
 ## Installation
 

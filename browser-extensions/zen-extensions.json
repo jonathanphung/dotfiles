@@ -1,0 +1,68 @@
+{
+  "browser": "zen",
+  "addons": [
+    {
+      "name": "Bitwarden Password Manager",
+      "id": "{446900e4-71c2-419f-a6a7-df9c091e268b}",
+      "type": "extension",
+      "version": "2026.8.0",
+      "enabled": true,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/bitwarden-password-manager/"
+    },
+    {
+      "name": "Leetion (dev) - LeetCode to Notion",
+      "id": "leetion-dev@jonathanphung.com",
+      "type": "extension",
+      "version": "1.1.5.1",
+      "enabled": true,
+      "install": "local",
+      "note": "side-loaded, not on AMO -- rebuild from source"
+    },
+    {
+      "name": "Leetion - LeetCode to Notion",
+      "id": "neel@leetion.com",
+      "type": "extension",
+      "version": "1.1.5",
+      "enabled": false,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/leetion/"
+    },
+    {
+      "name": "uBlock Origin",
+      "id": "uBlock0@raymondhill.net",
+      "type": "extension",
+      "version": "1.73.0",
+      "enabled": true,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
+    },
+    {
+      "name": "Unhook - Remove YouTube Recommended & Shorts",
+      "id": "myallychou@gmail.com",
+      "type": "extension",
+      "version": "1.6.9",
+      "enabled": true,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/"
+    },
+    {
+      "name": "Vimium",
+      "id": "{d7742d87-e61d-4b78-b8a1-b469842139fa}",
+      "type": "extension",
+      "version": "2.4.2",
+      "enabled": true,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/"
+    },
+    {
+      "name": "Vimium New Tab Page",
+      "id": "@vimium-new-tab",
+      "type": "extension",
+      "version": "1.0",
+      "enabled": true,
+      "install": "amo",
+      "url": "https://addons.mozilla.org/en-US/firefox/addon/vimium-new-tab-page/"
+    }
+  ]
+}
