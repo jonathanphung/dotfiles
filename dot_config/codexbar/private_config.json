@@ -2,8 +2,7 @@
   "providers" : [
     {
       "codexActiveSource" : {
-        "accountID" : "23204388-7CA0-4E91-9CC9-0B7AC57DB151",
-        "kind" : "managedAccount"
+        "kind" : "liveSystem"
       },
       "enabled" : true,
       "id" : "codex"
