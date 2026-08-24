@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "fn+Caps Lock: toggle Caps Lock between Escape/Control remap and native behavior",
+                        "description": "cmd+Caps Lock: toggle Caps Lock between Escape/Control remap and native behavior",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -16,7 +16,7 @@
                                 ],
                                 "from": {
                                     "key_code": "caps_lock",
-                                    "modifiers": { "mandatory": ["fn"] }
+                                    "modifiers": { "mandatory": ["command"] }
                                 },
                                 "to": [
                                     {
@@ -38,7 +38,7 @@
                                 ],
                                 "from": {
                                     "key_code": "caps_lock",
-                                    "modifiers": { "mandatory": ["fn"] }
+                                    "modifiers": { "mandatory": ["command"] }
                                 },
                                 "to": [
                                     {
