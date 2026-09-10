@@ -164,6 +164,9 @@ do
   -- Show which line your cursor is on
   vim.o.cursorline = true
 
+  -- Show a vertical guide at column 100
+  vim.opt.colorcolumn = '100'
+
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.o.scrolloff = 10
 
@@ -212,7 +215,9 @@ do
     },
   }
 
+  vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Open [D]iagnostic under cursor' })
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+  vim.keymap.set('n', '<C-d>', '<cmd>q<CR>', { desc = 'Quit current window' })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -221,6 +226,12 @@ do
   -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
   -- or just use <C-\><C-n> to exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+  -- Save and run the current Java file in a terminal inside a vertical split.
+  -- User commands must start with an uppercase letter, so expose `:Run` as lowercase `:run`.
+  vim.api.nvim_create_user_command('Run', 'update | vsplit | terminal java %', { desc = 'Run current Java file' })
+  vim.cmd [[cnoreabbrev <expr> run getcmdtype() ==# ':' && getcmdline() ==# 'run' ? 'Run' : 'run']]
+  vim.keymap.set('n', '<leader>r', '<cmd>Run<CR>', { desc = '[R]un current Java file' })
 
   -- TIP: Disable arrow keys in normal mode
   -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -253,6 +264,17 @@ do
     desc = 'Highlight when yanking (copying) text',
     group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
     callback = function() vim.hl.on_yank() end,
+  })
+
+  -- Save normal file buffers whenever Insert mode ends.
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    desc = 'Save after leaving Insert mode',
+    group = vim.api.nvim_create_augroup('autosave-on-insert-leave', { clear = true }),
+    callback = function()
+      if vim.bo.modified and vim.bo.modifiable and not vim.bo.readonly and vim.bo.buftype == '' and vim.api.nvim_buf_get_name(0) ~= '' then
+        vim.cmd 'silent update'
+      end
+    end,
   })
 end
 
@@ -1112,7 +1134,7 @@ do
   --
   -- require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
-  -- require 'kickstart.plugins.lint'
+  require 'kickstart.plugins.lint'
   require 'kickstart.plugins.autopairs'
   -- require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
