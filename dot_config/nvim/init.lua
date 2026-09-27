@@ -385,7 +385,11 @@ do
   -- We first install it from https://github.com/NMAC427/guess-indent.nvim
   -- and then call its `setup()` function to start it with default settings.
   vim.pack.add { gh 'NMAC427/guess-indent.nvim' }
-  require('guess-indent').setup {}
+  local four_spaces = { expandtab = true, tabstop = 4, softtabstop = 4, shiftwidth = 4 }
+  require('guess-indent').setup {
+    on_tab_options = four_spaces, -- tab files: indent with 4 spaces
+    on_space_options = four_spaces, -- space files: force 4 wide
+  }
 
   -- Here is a more advanced configuration example that passes options to `gitsigns.nvim`
   --
@@ -938,6 +942,7 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'prettier',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -955,6 +960,18 @@ end
 do
   -- [[ Formatting ]]
   vim.pack.add { gh 'stevearc/conform.nvim' }
+
+  -- Filetypes Prettier formats (on save and with <leader>f)
+  local prettier_fts = {
+    'javascript', 'javascriptreact', 'typescript', 'typescriptreact',
+    'vue', 'css', 'scss', 'less', 'html', 'json', 'jsonc',
+    'yaml', 'markdown', 'graphql',
+  }
+  local prettier_by_ft = {}
+  for _, ft in ipairs(prettier_fts) do
+    prettier_by_ft[ft] = { 'prettier' }
+  end
+
   require('conform').setup {
     notify_on_error = false,
     format_on_save = function(bufnr)
@@ -963,7 +980,8 @@ do
         -- lua = true,
         -- python = true,
       }
-      if enabled_filetypes[vim.bo[bufnr].filetype] then
+      local ft = vim.bo[bufnr].filetype
+      if enabled_filetypes[ft] or prettier_by_ft[ft] then
         return { timeout_ms = 500 }
       else
         return nil
@@ -973,7 +991,7 @@ do
       lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
     },
     -- You can also specify external formatters in here.
-    formatters_by_ft = {
+    formatters_by_ft = vim.tbl_extend('force', prettier_by_ft, {
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
@@ -981,6 +999,12 @@ do
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
       tex = { 'latexindent' },
+    }),
+    formatters = {
+      prettier = {
+        -- Always 4 spaces, never tabs (overrides any .prettierrc)
+        prepend_args = { '--tab-width', '4', '--use-tabs', 'false' },
+      },
     },
   }
 
