@@ -965,7 +965,7 @@ do
   local prettier_fts = {
     'javascript', 'javascriptreact', 'typescript', 'typescriptreact',
     'vue', 'css', 'scss', 'less', 'html', 'json', 'jsonc',
-    'yaml', 'markdown', 'graphql',
+    'yaml', 'markdown', 'graphql', 'svelte',
   }
   local prettier_by_ft = {}
   for _, ft in ipairs(prettier_fts) do
