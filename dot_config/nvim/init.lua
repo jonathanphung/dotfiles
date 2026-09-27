@@ -92,6 +92,10 @@ do
   -- Enable faster startup by caching compiled Lua modules
   vim.loader.enable()
 
+  -- GUI-launched Neovim may not inherit shell paths added by Homebrew and BasicTeX.
+  -- Keep Homebrew first so its self-contained latexindent overrides TeX Live's copy.
+  vim.env.PATH = '/opt/homebrew/bin:/Library/TeX/texbin:' .. (vim.env.PATH or '')
+
   -- Set <space> as the leader key
   -- See `:help mapleader`
   --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -399,7 +403,7 @@ do
 
   -- Switch the current window to the leetcode workspace in place: change cwd
   -- and open the directory listing, no new window/tab/process.
-  vim.keymap.set('n', '<leader>l', function()
+vim.keymap.set('n', '<leader>L', function()
     vim.cmd('cd ~/repos/leetcode')
     vim.cmd 'edit .'
   end, { desc = '[L]eet: switch to ~/repos/leetcode' })
@@ -867,7 +871,8 @@ do
     --    https://github.com/pmizio/typescript-tools.nvim
     --
     -- But for many setups, the LSP (`ts_ls`) will work just fine
-    -- ts_ls = {},
+    ts_ls = {},
+    svelte = {},
 
     stylua = {}, -- Used to format Lua code
 
@@ -968,6 +973,7 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      tex = { 'latexindent' },
     },
   }
 
@@ -994,8 +1000,11 @@ do
   -- require('luasnip.loaders.from_vscode').lazy_load()
 
   -- [[ Autocomplete Engine ]]
-  vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
-  require('blink.cmp').setup {
+  -- VSCode Neovim cannot reliably render Blink's completion scratch windows.
+  -- Keep Blink enabled in standalone Neovim, but use VS Code's completion UI there.
+  if not vim.g.vscode then
+    vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
+    require('blink.cmp').setup {
     keymap = {
       -- 'default' (recommended) for mappings similar to built-in completions
       --   <c-y> to accept ([y]es) the completion.
@@ -1053,7 +1062,8 @@ do
 
     -- Shows a signature help window while you type arguments for a function
     signature = { enabled = true },
-  }
+    }
+  end
 end
 
 -- ============================================================
@@ -1070,8 +1080,12 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'javascript', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'svelte', 'tsx', 'typescript', 'vim', 'vimdoc' }
   require('nvim-treesitter').install(parsers)
+
+  -- Auto-close and auto-rename HTML/JSX/TSX/Svelte tags (needs the parsers above)
+  vim.pack.add { gh 'windwp/nvim-ts-autotag' }
+  require('nvim-ts-autotag').setup()
 
   ---@param buf integer
   ---@param language string
@@ -1119,7 +1133,35 @@ do
 end
 
 -- ============================================================
--- SECTION 10: OPTIONAL EXAMPLES / NEXT STEPS
+-- SECTION 10: FILE EXPLORER
+-- nvim-tree for standalone Neovim only
+-- ============================================================
+if not vim.g.vscode then
+  vim.g.loaded_netrw = 1
+  vim.g.loaded_netrwPlugin = 1
+
+  vim.pack.add { gh 'nvim-tree/nvim-tree.lua' }
+  require('nvim-tree').setup {}
+
+  vim.keymap.set('n', '\\', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+end
+
+-- ============================================================
+-- SECTION 11: LATEX
+-- VimTeX editing, latexmk compilation, and Skim PDF preview
+-- ============================================================
+do
+  -- Match Villy-P's VimTeX settings, using Skim as the macOS PDF viewer.
+  vim.g.vimtex_view_method = 'skim'
+  vim.g.vimtex_quickfix_mode = 0
+  vim.g.tex_flavor = 'latex'
+
+  -- VimTeX manages its own filetype loading and should not be lazy-loaded.
+  vim.pack.add { gh 'lervag/vimtex' }
+end
+
+-- ============================================================
+-- SECTION 12: OPTIONAL EXAMPLES / NEXT STEPS
 -- kickstart.plugins.* examples
 -- ============================================================
 do

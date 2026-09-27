@@ -4,6 +4,9 @@
 PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
 export PATH
 
+# macOS path_helper can move Homebrew behind paths added by system installers.
+export PATH="/opt/homebrew/bin:$PATH"
+
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
