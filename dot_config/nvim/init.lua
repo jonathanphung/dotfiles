@@ -250,7 +250,7 @@ do
   --
   -- NOTE: CTRL-SHIFT-<hjkl> are bound to terminal-aware split navigation in
   -- SECTION 5, so navigation flows seamlessly out into neighboring Kitty or
-  -- WezTerm panes. (Plain CTRL-h/l are terminal tab-switch keys.)
+  -- WezTerm panes. In Kitty, CTRL-h/l navigate and CTRL-SHIFT-h/l switch tabs.
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -582,11 +582,11 @@ do
     vim.keymap.set('n', '<C-S-l>', wezterm_navigate('Right', 'l'), { desc = 'Focus split/pane right' })
   else
     -- [[ Kitty Navigator ]]
-    -- Lets CTRL-SHIFT-hjkl move between NeoVim splits and Kitty splits with
+    -- Lets CTRL-h/l and CTRL-SHIFT-j/k move between NeoVim splits and Kitty splits with
     -- the same keys. Requires Kitty remote control plus pass_keys.py.
     vim.pack.add { gh 'MunsMan/kitty-navigator.nvim' }
     require('kitty-navigator').setup {
-      keybindings = { left = '<C-S-h>', right = '<C-S-l>', up = '<C-S-k>', down = '<C-S-j>' },
+      keybindings = { left = '<C-h>', right = '<C-l>', up = '<C-S-k>', down = '<C-S-j>' },
     }
 
     -- [[ Kitty Scrollback ]]
