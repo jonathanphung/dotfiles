@@ -181,6 +181,12 @@ do
 
   -- Shell used by :terminal
   vim.o.shell = 'zsh'
+
+  -- Indentation: 4 wide, spaces instead of tabs
+  vim.o.tabstop = 4
+  vim.o.shiftwidth = 4
+  vim.o.softtabstop = 4
+  vim.o.expandtab = true
 end
 
 -- ============================================================
