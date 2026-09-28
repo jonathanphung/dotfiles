@@ -45,3 +45,13 @@ alias n="nvim"
 alias leet="cd ~/repos/leetcode && yazi"
 alias learnvim="cd ~/.vscode/extensions/vintharas.learn-vim-0.0.28/exercises && yazi"
 alias dev="kitty @ launch --location=vsplit --cwd=current lazygit && exec claude"
+
+# Yazi: y opens yazi, cd into its folder on quit
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
+alias lg='lazygit'
