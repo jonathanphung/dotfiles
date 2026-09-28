@@ -237,11 +237,30 @@ do
   -- or just use <C-\><C-n> to exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
-  -- Save and run the current Java file in a terminal inside a vertical split.
+  -- Save, compile every Java file beside the current file, then run the current class.
   -- User commands must start with an uppercase letter, so expose `:Run` as lowercase `:run`.
-  vim.api.nvim_create_user_command('Run', 'update | vsplit | terminal java %', { desc = 'Run current Java file' })
+  vim.api.nvim_create_user_command('Run', function()
+    vim.cmd 'update'
+    local file = vim.api.nvim_buf_get_name(0)
+    local directory = vim.fn.fnamemodify(file, ':h')
+    local class = vim.fn.fnamemodify(file, ':t:r')
+    vim.cmd 'vsplit'
+    vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && javac *.java && java ' .. vim.fn.shellescape(class))
+  end, { desc = 'Compile sibling Java files and run current class' })
   vim.cmd [[cnoreabbrev <expr> run getcmdtype() ==# ':' && getcmdline() ==# 'run' ? 'Run' : 'run']]
-  vim.keymap.set('n', '<leader>r', '<cmd>Run<CR>', { desc = '[R]un current Java file' })
+  vim.keymap.set('n', '<leader>rj', '<cmd>Run<CR>', { desc = '[R]un current [J]ava file' })
+  vim.keymap.set('n', '<leader>rn', function()
+    local file = vim.api.nvim_buf_get_name(0)
+    local start = file ~= '' and vim.fs.dirname(file) or vim.fn.getcwd()
+    local package_json = vim.fs.find('package.json', { path = start, upward = true })[1]
+    if not package_json then
+      vim.notify('No package.json found for npm run dev', vim.log.levels.ERROR)
+      return
+    end
+    local directory = vim.fs.dirname(package_json)
+    vim.cmd 'tabnew'
+    vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && npm run dev')
+  end, { desc = '[R]un [N]pm dev server' })
 
   -- TIP: Disable arrow keys in normal mode
   -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
