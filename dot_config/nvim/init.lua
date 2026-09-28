@@ -903,6 +903,7 @@ do
     ts_ls = {},
     svelte = {},
     tailwindcss = {},
+    jdtls = {},
 
     stylua = {}, -- Used to format Lua code
 
