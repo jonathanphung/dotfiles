@@ -261,6 +261,42 @@ do
     vim.cmd 'tabnew'
     vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && npm run dev')
   end, { desc = '[R]un [N]pm dev server' })
+  vim.keymap.set('n', '<leader>rp', function()
+    local file = vim.api.nvim_buf_get_name(0)
+    local start = file ~= '' and vim.fs.dirname(file) or vim.fn.getcwd()
+    local package_json = vim.fs.find('package.json', { path = start, upward = true })[1]
+    if not package_json then
+      vim.notify('No package.json found for pnpm dev', vim.log.levels.ERROR)
+      return
+    end
+    local directory = vim.fs.dirname(package_json)
+    vim.cmd 'tabnew'
+    vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && pnpm dev')
+  end, { desc = '[R]un [P]npm dev server' })
+  vim.keymap.set('n', '<leader>rb', function()
+    local file = vim.api.nvim_buf_get_name(0)
+    local start = file ~= '' and vim.fs.dirname(file) or vim.fn.getcwd()
+    local package_json = vim.fs.find('package.json', { path = start, upward = true })[1]
+    if not package_json then
+      vim.notify('No package.json found for pnpm build', vim.log.levels.ERROR)
+      return
+    end
+    local directory = vim.fs.dirname(package_json)
+    vim.cmd 'tabnew'
+    vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && pnpm build')
+  end, { desc = '[R]un pnpm [B]uild' })
+  vim.keymap.set('n', '<leader>rw', function()
+    local file = vim.api.nvim_buf_get_name(0)
+    local start = file ~= '' and vim.fs.dirname(file) or vim.fn.getcwd()
+    local package_json = vim.fs.find('package.json', { path = start, upward = true })[1]
+    if not package_json then
+      vim.notify('No package.json found for pnpm build:watch', vim.log.levels.ERROR)
+      return
+    end
+    local directory = vim.fs.dirname(package_json)
+    vim.cmd 'tabnew'
+    vim.cmd('terminal cd ' .. vim.fn.shellescape(directory) .. ' && pnpm build:watch')
+  end, { desc = '[R]un pnpm build:[W]atch' })
 
   -- TIP: Disable arrow keys in normal mode
   -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
