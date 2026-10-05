@@ -1017,50 +1017,66 @@ do
   -- [[ Formatting ]]
   vim.pack.add { gh 'stevearc/conform.nvim' }
 
-  -- Filetypes Prettier formats (on save and with <leader>f)
-  local prettier_fts = {
+  -- Format web files only when the project supplies a formatter config.
+  local web_fts = {
     'javascript', 'javascriptreact', 'typescript', 'typescriptreact',
     'vue', 'css', 'scss', 'less', 'html', 'json', 'jsonc',
     'yaml', 'markdown', 'graphql', 'svelte',
   }
-  local prettier_by_ft = {}
-  for _, ft in ipairs(prettier_fts) do
-    prettier_by_ft[ft] = { 'prettier' }
+  local biome_fts = {
+    javascript = true, javascriptreact = true, typescript = true,
+    typescriptreact = true, css = true, json = true, jsonc = true, graphql = true,
+  }
+  local prettier_configs = {
+    '.prettierrc', '.prettierrc.json', '.prettierrc.json5',
+    '.prettierrc.yaml', '.prettierrc.yml', '.prettierrc.toml',
+    '.prettierrc.js', '.prettierrc.cjs', '.prettierrc.mjs',
+    '.prettierrc.ts', '.prettierrc.cts', '.prettierrc.mts',
+    'prettier.config.js', 'prettier.config.cjs', 'prettier.config.mjs',
+    'prettier.config.ts', 'prettier.config.cts', 'prettier.config.mts',
+  }
+  local function project_formatters(bufnr)
+    local directory = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+    while directory do
+      if biome_fts[vim.bo[bufnr].filetype]
+        and (vim.uv.fs_stat(directory .. '/biome.json') or vim.uv.fs_stat(directory .. '/biome.jsonc')) then
+        return { 'biome' }
+      end
+      for _, config in ipairs(prettier_configs) do
+        if vim.uv.fs_stat(directory .. '/' .. config) then return { 'prettier' } end
+      end
+      local package = directory .. '/package.json'
+      if vim.uv.fs_stat(package) then
+        local ok, data = pcall(function() return vim.json.decode(table.concat(vim.fn.readfile(package), '\n')) end)
+        if ok and type(data) == 'table' and data.prettier ~= nil then return { 'prettier' } end
+      end
+      if vim.uv.fs_stat(directory .. '/.git') then break end
+      local parent = vim.fs.dirname(directory)
+      if parent == directory then break end
+      directory = parent
+    end
+    return {}
+  end
+  local formatters_by_ft = { tex = { 'latexindent' } }
+  local web_filetypes = {}
+  for _, ft in ipairs(web_fts) do
+    formatters_by_ft[ft] = project_formatters
+    web_filetypes[ft] = true
   end
 
   require('conform').setup {
-    notify_on_error = false,
+    notify_on_error = true,
     format_on_save = function(bufnr)
-      -- You can specify filetypes to autoformat on save here:
-      local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
-      }
-      local ft = vim.bo[bufnr].filetype
-      if enabled_filetypes[ft] or prettier_by_ft[ft] then
-        return { timeout_ms = 500 }
-      else
-        return nil
+      if web_filetypes[vim.bo[bufnr].filetype] and #project_formatters(bufnr) > 0 then
+        return { timeout_ms = 1000, lsp_format = 'never' }
       end
     end,
     default_format_opts = {
-      lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
+      lsp_format = 'never',
     },
-    -- You can also specify external formatters in here.
-    formatters_by_ft = vim.tbl_extend('force', prettier_by_ft, {
-      -- rust = { 'rustfmt' },
-      -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      tex = { 'latexindent' },
-    }),
+    formatters_by_ft = formatters_by_ft,
     formatters = {
-      prettier = {
-        -- Always 4 spaces, never tabs (overrides any .prettierrc)
-        prepend_args = { '--tab-width', '4', '--use-tabs', 'false' },
-      },
+      biome = { require_cwd = true },
     },
   }
 
