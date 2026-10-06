@@ -1040,7 +1040,7 @@ do
     while directory do
       if biome_fts[vim.bo[bufnr].filetype]
         and (vim.uv.fs_stat(directory .. '/biome.json') or vim.uv.fs_stat(directory .. '/biome.jsonc')) then
-        return { 'biome' }
+        return { 'biome-check' }
       end
       for _, config in ipairs(prettier_configs) do
         if vim.uv.fs_stat(directory .. '/' .. config) then return { 'prettier' } end
@@ -1076,7 +1076,7 @@ do
     },
     formatters_by_ft = formatters_by_ft,
     formatters = {
-      biome = { require_cwd = true },
+      ['biome-check'] = { require_cwd = true },
     },
   }
 
