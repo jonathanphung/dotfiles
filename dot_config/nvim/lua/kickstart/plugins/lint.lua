@@ -113,6 +113,7 @@ local function lint_buffer()
     cwd = root,
     wrap_linter = function(linter)
       linter.cmd = executable
+      if name == 'biomejs' then linter.args = { 'check' } end
       return linter
     end,
   })
