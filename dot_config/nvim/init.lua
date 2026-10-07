@@ -461,6 +461,8 @@ do
     },
   }
 
+  vim.keymap.set('n', '<leader>gb', '<cmd>Gitsigns blame_line<cr>', { desc = '[G]it [B]lame line' })
+
   -- Open lazygit in a floating window over the current buffer. Depends on
   -- plenary.nvim (already pulled in by Telescope below) for the border.
   vim.pack.add { gh 'kdheepak/lazygit.nvim' }
