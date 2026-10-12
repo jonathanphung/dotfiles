@@ -4,3 +4,7 @@
 .config/zsh/plugins
 .config/gh/hosts.yml
 /browser-extensions
+
+/setup-linux.sh
+/scripts
+/tests

@@ -653,8 +653,8 @@ do
     vim.keymap.set('n', '<C-S-j>', wezterm_navigate('Down', 'j'), { desc = 'Focus split/pane down' })
     vim.keymap.set('n', '<C-S-k>', wezterm_navigate('Up', 'k'), { desc = 'Focus split/pane up' })
     vim.keymap.set('n', '<C-S-l>', wezterm_navigate('Right', 'l'), { desc = 'Focus split/pane right' })
-  elseif vim.env.SSH_CONNECTION or vim.env.SSH_TTY then
-    -- Kitty runs on the client; keep navigation inside remote Neovim.
+  elseif vim.env.SSH_CONNECTION or vim.env.SSH_TTY or vim.fn.executable 'kitty' ~= 1 then
+    -- Without a local Kitty process, keep navigation inside Neovim.
     vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Focus split left' })
     vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Focus split right' })
     vim.keymap.set('n', '<C-S-k>', '<C-w>k', { desc = 'Focus split up' })

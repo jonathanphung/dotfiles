@@ -88,3 +88,50 @@ Launch `nvim` on UTCS to install plugins, then run `:checkhealth`. Git, a C
 compiler, make, ripgrep, and language-specific tools may be needed for full
 plugin functionality. Java linting additionally expects Checkstyle and
 `~/repos/cs314-hygiene-checker/checkstyle.xml`.
+
+## One-command Linux setup
+
+From a clone of this private repository:
+
+```sh
+bash setup-linux.sh
+exec zsh -l
+```
+
+Re-run the same command to apply updated configs. Working tools are skipped;
+Neovim, fzf, fd, Tree-sitter, and Node are upgraded if too old for this config.
+Use `bash setup-linux.sh --check` for a read-only prerequisite/tool check.
+
+Supports glibc Linux on x86_64 and ARM64 with Python 3.9+, curl, Git, Zsh,
+make, and a C compiler already installed. Missing prerequisites are reported
+with no sudo or package-manager changes. Alpine/musl and other architectures
+need distro packages instead. Downloaded binaries must work with the host's
+glibc; incompatible builds stop before deploying configs.
+
+Installs tools into `~/.local/bin`, with Neovim and Node bundles in
+`~/.local/lib/dotfiles`. Downloads come from official releases and are checked
+against pinned SHA-256 hashes; Node 24 uses the official release checksum list.
+Includes eza, bat, ripgrep, fd, fzf, Starship, Zoxide, Yazi, Lazygit, Neovim,
+Tree-sitter CLI, and Node/npm/npx. Existing compatible tools are reused.
+
+Copies the shared Neovim, Zsh, Lazygit, bat, syntax-highlighting, and Starship
+configs. Changed files and replaced executable links are backed up under
+`~/.local/state/dotfiles/backups/<timestamp>/`. Identical files are untouched.
+Zsh is redirected through `~/.zshenv`; any existing `~/.zshrc` stays on disk
+but the new shell uses `~/.config/zsh/.zshrc`. Zsh plugins install on first load.
+
+Kitty stays on the client. Connect with `kitten ssh` for remote terminal
+support. Open Neovim after setup for plugin installation and `:checkhealth`.
+Optional PDF/image/video preview tools and language-specific requirements
+(such as Java/Checkstyle and TeX) are not installed by this script.
+
+For UTCS without GitHub authentication on the server, copy the repo from your
+Mac (excluding its Git metadata), then run the installer inside SSH:
+
+```sh
+# On your Mac, from the dotfiles repository:
+ssh jonat@linux.cs.utexas.edu 'mkdir -p ~/dotfiles'
+tar --exclude=.git --exclude=.DS_Store -czf - . | ssh jonat@linux.cs.utexas.edu 'tar -xzf - -C ~/dotfiles'
+# Inside your UTCS SSH session:
+bash ~/dotfiles/setup-linux.sh
+```

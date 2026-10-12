@@ -10,9 +10,11 @@ if command -v bat >/dev/null 2>&1; then
   export MANPAGER="bat -l man -p"
 fi
 
-export GPG_TTY=$(tty)
+[[ -t 0 ]] && export GPG_TTY=$(tty)
 
-export PATH="/opt/homebrew/bin:$PATH"
+if [[ $OSTYPE == darwin* ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+fi
 export PATH="$HOME/.local/bin:$PATH"
 
 # bun

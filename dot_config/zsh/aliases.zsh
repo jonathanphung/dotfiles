@@ -44,7 +44,9 @@ alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias n="nvim"
 alias leet="cd ~/repos/leetcode && yazi"
 alias learnvim="cd ~/.vscode/extensions/vintharas.learn-vim-0.0.28/exercises && yazi"
-alias dev="kitty @ launch --location=vsplit --cwd=current lazygit && exec claude"
+if (( $+commands[kitty] && $+commands[claude] )) && [[ -z ${SSH_CONNECTION:-}${SSH_TTY:-} ]]; then
+  alias dev="kitty @ launch --location=vsplit --cwd=current lazygit && exec claude"
+fi
 
 # Yazi: y opens yazi, cd into its folder on quit
 function y() {
