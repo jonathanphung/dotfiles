@@ -66,3 +66,25 @@ To pick up a local edit made directly to a deployed config (e.g. editing
 chezmoi re-add ~/.config/kitty/kitty.conf
 cd $(chezmoi source-path) && git add -A && git commit -m "..." && git push
 ```
+
+## Neovim on Linux / UTCS
+
+The same Neovim config supports macOS and Linux and requires Neovim 0.12+.
+Homebrew/BasicTeX paths and Skim are enabled only on macOS. Over SSH, split
+navigation stays inside Neovim, terminal color synchronization is skipped,
+and VimTeX PDF viewing is disabled. Kitty itself runs on the client.
+
+For a Neovim-only install, run these commands on your Mac. Back up an existing
+remote `~/.config/nvim` first. This copies your active config without applying
+the rest of the dotfiles or their install scripts.
+
+```sh
+ssh jonat@linux.cs.utexas.edu 'mkdir -p ~/.config/nvim'
+scp -r ~/.config/nvim/init.lua ~/.config/nvim/nvim-pack-lock.json ~/.config/nvim/lua jonat@linux.cs.utexas.edu:~/.config/nvim/
+kitten ssh jonat@linux.cs.utexas.edu
+```
+
+Launch `nvim` on UTCS to install plugins, then run `:checkhealth`. Git, a C
+compiler, make, ripgrep, and language-specific tools may be needed for full
+plugin functionality. Java linting additionally expects Checkstyle and
+`~/repos/cs314-hygiene-checker/checkstyle.xml`.

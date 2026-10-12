@@ -94,7 +94,9 @@ do
 
   -- GUI-launched Neovim may not inherit shell paths added by Homebrew and BasicTeX.
   -- Keep Homebrew first so its self-contained latexindent overrides TeX Live's copy.
-  vim.env.PATH = '/opt/homebrew/bin:/Library/TeX/texbin:' .. (vim.env.PATH or '')
+  if vim.fn.has 'macunix' == 1 then
+    vim.env.PATH = '/opt/homebrew/bin:/Library/TeX/texbin:' .. (vim.env.PATH or '')
+  end
 
   -- Set <space> as the leader key
   -- See `:help mapleader`
@@ -408,6 +410,7 @@ do
 
       if name == 'kitty-navigator.nvim' then
         local kitty_config_dir = (vim.env.XDG_CONFIG_HOME or vim.env.HOME .. '/.config') .. '/kitty'
+        vim.fn.mkdir(kitty_config_dir, 'p')
         run_build(name, { 'cp', 'navigate_kitty.py', 'pass_keys.py', kitty_config_dir }, ev.data.path)
         return
       end
@@ -530,6 +533,9 @@ vim.keymap.set('n', '<leader>L', function()
       -- stay correct.
       vim.g.colors_name = name
       vim.fn.writefile({ name }, base16_theme_fname)
+      -- Remote Neovim keeps its theme without changing the local terminal.
+      if vim.env.SSH_CONNECTION or vim.env.SSH_TTY then return end
+      vim.fn.mkdir(vim.env.HOME .. '/.config/kitty', 'p')
       local kitty_conf = string.format(vim.env.HOME .. '/base16-kitty/colors/%s.conf', name)
       if vim.uv.fs_stat(kitty_conf) then
         -- Push to every open Kitty window (not just the active one). WezTerm
@@ -647,6 +653,12 @@ do
     vim.keymap.set('n', '<C-S-j>', wezterm_navigate('Down', 'j'), { desc = 'Focus split/pane down' })
     vim.keymap.set('n', '<C-S-k>', wezterm_navigate('Up', 'k'), { desc = 'Focus split/pane up' })
     vim.keymap.set('n', '<C-S-l>', wezterm_navigate('Right', 'l'), { desc = 'Focus split/pane right' })
+  elseif vim.env.SSH_CONNECTION or vim.env.SSH_TTY then
+    -- Kitty runs on the client; keep navigation inside remote Neovim.
+    vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Focus split left' })
+    vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Focus split right' })
+    vim.keymap.set('n', '<C-S-k>', '<C-w>k', { desc = 'Focus split up' })
+    vim.keymap.set('n', '<C-S-j>', '<C-w>j', { desc = 'Focus split down' })
   else
     -- [[ Kitty Navigator ]]
     -- Lets CTRL-h/l and CTRL-SHIFT-j/k move between NeoVim splits and Kitty splits with
@@ -1257,7 +1269,11 @@ end
 -- ============================================================
 do
   -- Match Villy-P's VimTeX settings, using Skim as the macOS PDF viewer.
-  vim.g.vimtex_view_method = 'skim'
+  if vim.fn.has 'macunix' == 1 then
+    vim.g.vimtex_view_method = 'skim'
+  elseif vim.env.SSH_CONNECTION or vim.env.SSH_TTY then
+    vim.g.vimtex_view_enabled = 0
+  end
   vim.g.vimtex_quickfix_mode = 0
   vim.g.tex_flavor = 'latex'
 
