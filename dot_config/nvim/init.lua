@@ -181,6 +181,9 @@ do
   -- See `:help 'confirm'`
   vim.o.confirm = true
 
+  -- Retain up to one million lines of terminal output.
+  vim.opt.scrollback = 1000000
+
   -- Shell used by :terminal
   vim.o.shell = 'zsh'
 
