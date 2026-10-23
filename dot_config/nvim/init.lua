@@ -242,6 +242,9 @@ do
   -- or just use <C-\><C-n> to exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+  -- Save without running formatting or other save autocommands.
+  vim.api.nvim_create_user_command('W', 'noautocmd write', { desc = 'Save without formatting' })
+
   -- Save, compile every Java file beside the current file, then run the current class.
   -- User commands must start with an uppercase letter, so expose `:Run` as lowercase `:run`.
   vim.api.nvim_create_user_command('Run', function()
