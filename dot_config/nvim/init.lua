@@ -1257,16 +1257,13 @@ end
 
 -- ============================================================
 -- SECTION 10: FILE EXPLORER
--- nvim-tree for standalone Neovim only
+-- Neo-tree for standalone Neovim only
 -- ============================================================
 if not vim.g.vscode then
   vim.g.loaded_netrw = 1
   vim.g.loaded_netrwPlugin = 1
 
-  vim.pack.add { gh 'nvim-tree/nvim-tree.lua' }
-  require('nvim-tree').setup {}
-
-  vim.keymap.set('n', '\\', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+  require 'kickstart.plugins.neo-tree'
 end
 
 -- ============================================================
@@ -1305,7 +1302,6 @@ do
   -- require 'kickstart.plugins.indent_line'
   require 'kickstart.plugins.lint'
   require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
